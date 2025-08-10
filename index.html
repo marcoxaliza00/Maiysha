@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Maiysha — Birthday · marcoxaliza00</title>
+<style>
+  :root{
+    --pink1:#ffddeb; --pink2:#ffb6c1; --gold:#ffd36b; --bg:#fff6f9;
+    --card-bg:rgba(255,255,255,0.92); --accent:#ff6fa3;
+  }
+  *{box-sizing:border-box}
+  body,html{height:100%; margin:0; font-family:Inter, "Segoe UI", system-ui, -apple-system, "Comic Sans MS", sans-serif; background:linear-gradient(135deg,var(--pink1),var(--pink2)); color:#1b1b1b; -webkit-font-smoothing:antialiased}
+  .center{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px}
+  /* Intro panel */
+  .intro{
+    width:920px; max-width:96vw; border-radius:18px; padding:28px; background:linear-gradient(180deg,rgba(0,0,0,0.06), rgba(255,255,255,0.55));
+    box-shadow:0 18px 50px rgba(0,0,0,0.14); display:flex; gap:18px; align-items:center; overflow:hidden; position:relative;
+  }
+  .avatar{width:96px; height:96px; border-radius:14px; flex:0 0 96px; overflow:hidden; border:4px solid var(--gold); background:#fff}
+  .avatar img{width:100%; height:100%; object-fit:cover; display:block}
+  .intro-text{flex:1; min-width:0}
+  .tiny{font-size:12px; color:#333; opacity:0.85}
+  .typewriter{
+    font-weight:700; font-size:1.5rem; margin:8px 0 6px 0; color:#111;
+    letter-spacing:0.2px;
+  }
+  .sub{color:#333; opacity:0.86}
+  .skip{position:absolute; right:14px; top:12px; background:transparent; border:2px solid rgba(0,0,0,0.06); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
+  .glow{text-shadow:0 6px 18px rgba(255,183,77,0.25)}
+  /* main birthday scene (hidden initially) */
+  .scene{display:none; width:920px; max-width:96vw; border-radius:18px; padding:28px; background:var(--card-bg); box-shadow:0 18px 60px rgba(0,0,0,0.12); text-align:center; position:relative; overflow:hidden}
+  h1.main-title{font-size:2.4rem; margin:6px 0; color:#222}
+  .name-letters{display:inline-block}
+  .letter{display:inline-block; opacity:0; transform:translateY(14px) scale(0.95); animation:pop .46s forwards cubic-bezier(.2,.9,.3,1)}
+  @keyframes pop{to{opacity:1; transform:none}}
+  .card{max-width:740px; margin:12px auto; padding:18px; border-radius:14px}
+  .quiz p{margin:0 0 10px}
+  .btn{background:var(--gold); border:none; padding:10px 16px; margin:6px; border-radius:12px; cursor:pointer; font-weight:800; box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+  .btn:active{transform:translateY(1px)}
+  .ending{display:none; margin-top:16px; font-size:1.1rem; font-weight:700}
+  /* confetti */
+  .confetti{position:fixed; width:10px; height:12px; top:-20px; border-radius:3px; z-index:70; pointer-events:none}
+  @keyframes fall{to{transform:translateY(120vh) rotate(360deg)}}
+  /* balloons emojis */
+  .balloon{position:fixed; bottom:-150px; font-size:36px; pointer-events:none; animation:rise linear; z-index:60}
+  @keyframes rise{0%{transform:translateY(0) rotate(0deg)} 100%{transform:translateY(-130vh) rotate(-18deg); opacity:0}}
+  /* small controls */
+  .audio-control{position:fixed; left:12px; bottom:12px; background:rgba(255,255,255,0.9); padding:8px 10px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+  .audio-control button{border:none; background:transparent; font-weight:700; cursor:pointer}
+  /* neon subtitle */
+  .neon{color:#fff; background:linear-gradient(90deg,var(--accent),var(--gold)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; font-weight:800}
+  /* responsive */
+  @media (max-width:720px){
+    .intro, .scene{padding:16px}
+    .avatar{width:76px; height:76px}
+    .typewriter{font-size:1.1rem}
+    h1.main-title{font-size:1.6rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- CENTER CONTAINER -->
+<div class="center" id="root">
+
+  <!-- INTRO PANEL -->
+  <div class="intro" id="introPanel" aria-hidden="false">
+    <button class="skip" id="skipBtn">Skip Intro →</button>
+    <div class="avatar">
+      <!-- GitHub avatar (public) -->
+      <img id="avatarImg" src="https://github.com/marcoxaliza00.png" alt="avatar">
+    </div>
+    <div class="intro-text">
+      <div class="tiny">Welcome visitor</div>
+      <div class="typewriter" id="typewriter"></div>
+      <div class="sub">Hosted by <strong>@marcoxaliza00</strong> · <span class="neon">special birthday page</span></div>
+    </div>
+  </div>
+
+  <!-- BIRTHDAY SCENE -->
+  <div class="scene" id="mainScene" aria-hidden="true">
+    <h1 class="main-title"><span id="nameTitle"></span></h1>
+
+    <div class="card">
+      <div id="quiz" class="quiz">
+        <p>Quick Birthday Quiz: Are you the cutest troublemaker? 😏</p>
+        <button class="btn" onclick="answer(true)">Yes</button>
+        <button class="btn" onclick="answer(false)">No</button>
+      </div>
+
+      <div id="ending" class="ending">Okay fine… Happy Birthday to the cutest troublemaker! 🎂💖</div>
+    </div>
+
+    <!-- optional small GIF corner -->
+    <img id="balloonGif" src="https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif" alt="balloons" style="position:absolute;right:12px;top:12px;width:140px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12)">
+
+  </div>
+
+</div>
+
+<!-- audio control -->
+<div class="audio-control">
+  <audio id="bg-audio" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0fcdcd23f3.mp3?filename=happy-birthday-to-you-violin-violin-background-113447.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+  <button id="audioToggle">Play 🎵</button>
+</div>
+
+<script>
+/* -------- typewriter intro -------- */
+const messages = [
+  "Hello — I'm marcoxaliza00.",
+  "Welcome to my special page.",
+  "Loading a surprise for Maiysha..."
+];
+const tEl = document.getElementById('typewriter');
+let mi = 0, ci = 0, forward = true;
+
+function typeLoop(){
+  if(mi >= messages.length) return;
+  const msg = messages[mi];
+  if(ci <= msg.length){
+    tEl.textContent = msg.slice(0,ci) + (ci%2? '|' : '');
+    ci++;
+    setTimeout(typeLoop, 60);
+  } else {
+    // pause then go to next
+    setTimeout(()=>{ mi++; ci=0; typeLoop(); }, 800);
+  }
+}
+typeLoop();
+
+/* skip intro button */
+document.getElementById('skipBtn').addEventListener('click', ()=>{ enterMainScene(); });
+
+/* after intro auto proceed */
+setTimeout(()=>{ enterMainScene(); }, 3800 + (messages.length * 250) ); // tuned delay
+
+/* -------- entrance transition to main scene -------- */
+function enterMainScene(){
+  const intro = document.getElementById('introPanel');
+  const scene = document.getElementById('mainScene');
+  if(!intro || !scene) return;
+  // fade out intro
+  intro.style.transition = 'all 700ms ease';
+  intro.style.transform = 'translateY(-18px) scale(0.99)';
+  intro.style.opacity = '0';
+  setTimeout(()=>{ intro.style.display='none'; scene.style.display='block'; scene.style.opacity='0';
+    scene.style.transform='translateY(12px)';
+    // animate in
+    requestAnimationFrame(()=>{ scene.style.transition='all 650ms cubic-bezier(.2,.95,.2,1)'; scene.style.opacity='1'; scene.style.transform='none'; });
+    scene.setAttribute('aria-hidden','false'); intro.setAttribute('aria-hidden','true');
+    // start scene effects
+    startScene();
+  }, 720);
+}
+
+/* -------- main scene setup -------- */
+const fullName = "Happy Birthday Maiysha Fatima 🎉";
+const titleEl = document.getElementById('nameTitle');
+fullName.split('').forEach((ch,i)=>{
+  const s = document.createElement('span');
+  s.className = 'letter';
+  s.textContent = ch;
+  s.style.animationDelay = (0.06 * i) + 's';
+  titleEl.appendChild(s);
+});
+
+/* confetti + balloons logic */
+function spawnConfetti(n){
+  for(let i=0;i<n;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = Math.random()>0.5 ? 'gold' : '#ff6fa3';
+    c.style.width = (6 + Math.random()*10) + 'px';
+    c.style.height = (10 + Math.random()*13) + 'px';
+    c.style.animationDuration = (2 + Math.random()*3) + 's';
+    c.style.animationDelay = (Math.random()*0.8) + 's';
+    c.style.animationName = 'fall';
+    c.style.animationTimingFunction = 'linear';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 5000);
+  }
+}
+function makeBalloon(){
+  const b = document.createElement('div');
+  b.className = 'balloon';
+  b.textContent = ['🎈','🎉','💖'][Math.floor(Math.random()*3)];
+  const size = 20 + Math.floor(Math.random()*48);
+  b.style.fontSize = size + 'px';
+  b.style.left = Math.random()*80 + 'vw';
+  const dur = (5 + Math.random()*7);
+  b.style.animationDuration = dur + 's';
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(), (dur+0.6)*1000);
+}
+
+/* continuous gentle balloons */
+let balloonInterval;
+function startBalloons(){ balloonInterval = setInterval(makeBalloon, 900); }
+function stopBalloons(){ clearInterval(balloonInterval); }
+
+/* start everything when scene opens */
+function startScene(){
+  spawnConfetti(32);
+  startBalloons();
+  // show gif after tiny delay
+  setTimeout(()=>{ const g = document.getElementById('balloonGif'); if(g) g.style.opacity='1'; }, 900);
+}
+
+/* quiz answer */
+function answer(isYes){
+  document.getElementById('quiz').style.display='none';
+  const end = document.getElementById('ending');
+  end.style.display='block';
+  // celebration burst
+  spawnConfetti(24);
+  for(let i=0;i<10;i++){ setTimeout(makeBalloon, i*90); }
+}
+
+/* audio control */
+const audio = document.getElementById('bg-audio');
+const audioBtn = document.getElementById('audioToggle');
+audio.play().then(()=>{ audioBtn.textContent='Pause 🎵'; }).catch(()=>{ audioBtn.textContent='Play 🎵'; });
+
+audioBtn.addEventListener('click', ()=>{
+  if(audio.paused){ audio.play(); audioBtn.textContent='Pause 🎵'; }
+  else { audio.pause(); audioBtn.textContent='Play 🎵'; }
+});
+
+/* small accessibility: press Enter on Skip */
+document.getElementById('skipBtn').addEventListener('keyup', (e)=>{ if(e.key === 'Enter') enterMainScene(); });
+
+</script>
+</body>
+  </html>
+      
